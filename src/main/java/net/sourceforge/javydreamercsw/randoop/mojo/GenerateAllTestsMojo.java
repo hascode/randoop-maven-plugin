@@ -71,7 +71,7 @@ import org.codehaus.plexus.util.StringUtils;
  * @see <a href="http://maven.apache.org/general.html#What_is_a_Mojo">What is a
  * Mojo?</a>
  */
-public class RandoopMojo extends AbstractMojo {
+public class GenerateAllTestsMojo extends AbstractMojo {
 
     /**
      * The project whose project files to create.
@@ -283,6 +283,7 @@ public class RandoopMojo extends AbstractMojo {
      *
      */
     private boolean capture_output;
+    //TODO: Add property to be smart about location and naming of test cases based on class being tested
     private String version = "1.0-SNAPSHOT";
     private String groupId = "net.sourceforge.javydreamercsw";
     private String artifactId = "randoop-maven-plugin";

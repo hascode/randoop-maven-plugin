@@ -31,7 +31,7 @@ public class RandoopMojoTest extends AbstractMojoTestCase {
         File testPom = new File(getBasedir(),
                 "src/test/resources/net/sourceforge/javydreamercsw/randoop/mojo/"
                 + "my-dummy-maven-project/Dummy/pom.xml");
-        RandoopMojo mojo = (RandoopMojo) lookupMojo("generate-all-tests", testPom);
+        GenerateAllTestsMojo mojo = (GenerateAllTestsMojo) lookupMojo("generate-all-tests", testPom);
         assertNotNull(mojo);
         //Load the dummy project
         Model model = null;
