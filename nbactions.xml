@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Describe</actionName>
+            <displayName>Describe</displayName>
+            <goals>
+                <goal>help:describe</goal>
+                <goal>-Dplugin=net.sourceforge.javydreamercsw:randoop-maven-plugin</goal>
+                <goal>-Ddetail</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-Test</actionName>
+            <displayName>Test</displayName>
+            <goals>
+                <goal>net.sourceforge.javydreamercsw:randoop-maven-plugin:1.0-SNAPSHOT:generate-all-tests</goal>
+                
+            </goals>
+        </action>
+    </actions>

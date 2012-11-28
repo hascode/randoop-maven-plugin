@@ -2,6 +2,7 @@ package net.sourceforge.javydreamercsw.randoop.mojo;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.HashMap;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
@@ -43,7 +44,8 @@ public class RandoopMojoTest extends AbstractMojoTestCase {
             fail();
         }
         MavenProject dummy = new MavenProject(model);
-        mojo.project = dummy;
+        mojo.setPluginContext(new HashMap());
+        mojo.getPluginContext().put("project", dummy);
         mojo.execute();
     }
 }
