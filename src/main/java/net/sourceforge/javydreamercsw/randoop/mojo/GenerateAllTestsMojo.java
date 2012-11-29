@@ -69,10 +69,10 @@ import org.codehaus.plexus.util.StringUtils;
  * @see <a href="http://maven.apache.org/general.html#What_is_a_Mojo">What is a
  * Mojo?</a>
  */
-@Mojo( name = "generate-all-tests", 
-        requiresDependencyResolution = ResolutionScope.COMPILE, 
-        requiresDirectInvocation = true, 
-        defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
+@Mojo( name = "generate-all-tests",
+requiresDependencyResolution = ResolutionScope.COMPILE,
+requiresDirectInvocation = true,
+defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class GenerateAllTestsMojo extends AbstractMojo {
 
     /**
@@ -99,7 +99,7 @@ public class GenerateAllTestsMojo extends AbstractMojo {
      * The current build session instance. This is used for plugin manager API
      * calls.
      */
-    @Parameter(required = true, readonly = true, property= "session")
+    @Parameter(required = true, readonly = true, property = "session")
     private MavenSession session;
     /**
      * The local repository ArtifactRepository instance. This is used for plugin
@@ -108,88 +108,62 @@ public class GenerateAllTestsMojo extends AbstractMojo {
      */
     @Parameter(required = true, readonly = true, property = "localRepository")
     private ArtifactRepository localRepository;
-    
     @Parameter(required = true, defaultValue = "false")
     private boolean silently_ignore_bad_class_names;
-    
     @Parameter(required = true, defaultValue = "NONE")
     private String literals_level;
-    
     @Parameter(required = true, defaultValue = "0")
     private int randomseed;
-    
     @Parameter(required = true, defaultValue = "100")
     private int timelimit;
-    
     @Parameter(required = true, defaultValue = "100000000")
     private int inputlimit;
-    
     @Parameter(required = true, defaultValue = "100000000")
     private int outputlimit;
-    
     @Parameter(required = true, defaultValue = "100")
     private int maxsize;
-    
     @Parameter(required = true, defaultValue = "true")
     private boolean forbid_null;
-    
     @Parameter(required = true, defaultValue = "10000")
     private int string_maxlen;
-    
     @Parameter(required = true, defaultValue = "0.0")
     private Double null_ratio;
-    
     @Parameter(required = true, defaultValue = "0.0")
     private Double alias_ratio;
-    
     @Parameter(required = true, defaultValue = "false")
     private boolean small_tests;
-    
     @Parameter(required = true, defaultValue = "100000000")
     private int clear;
-    
     @Parameter(required = true, defaultValue = "true")
     private boolean check_object_contracts;
-    
     @Parameter(required = true, defaultValue = "all")
     private String output_tests;
-    
     @Parameter(required = true, defaultValue = "500")
     private int testsperfile;
-    
     @Parameter(required = true, defaultValue = "RandoopTest")
     private String junit_classname;
-    
     //TODO: No way to set defaultValue ="" on the annotation. 
     //Had to workaround it like this.
     @Parameter
-    private String junit_package_name="";
-    
+    private String junit_package_name = "";
     //TODO: No way to set defaultValue ="" on the annotation. 
     //Had to workaround it like this.
     @Parameter
-    private String junit_output_dir="";
-    
+    private String junit_output_dir = "";
     @Parameter(required = true, defaultValue = "false")
     private boolean dont_output_tests;
-    
     @Parameter(required = true, defaultValue = "false")
     private boolean output_nonexec;
-    
     //TODO: No way to set defaultValue ="" on the annotation. 
     //Had to workaround it like this.
     @Parameter(readonly = true)
-    private String agent="";
-    
+    private String agent = "";
     @Parameter(required = true, defaultValue = "1000")
     private int mem_megabytes;
-    
     @Parameter(required = true, defaultValue = "false")
     private boolean capture_output;
-    
     @Parameter(required = true, readonly = true, defaultValue = "false")
     private boolean smartGeneration;
-    
     private String version = "1.0-SNAPSHOT";
     private String groupId = "net.sourceforge.javydreamercsw";
     private String artifactId = "randoop-maven-plugin";
@@ -231,21 +205,24 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                     }
                     getLog().debug("Classpath: " + classpath.toString());
                     getLog().debug("Test directory: "
-                            + project.getModel().getBuild().getTestSourceDirectory());
+                            + project.getModel().getBuild()
+                            .getTestSourceDirectory());
                     commands.add("\"" + classpath.toString() + "\"");
                     commands.add("randoop.main.Main");
                     commands.add("gentests");
                     for (Iterator<File> it = sources.iterator(); it.hasNext();) {
                         File source = it.next();
-                        for (Iterator<File> it2 = getSources(source).iterator(); it2.hasNext();) {
+                        for (Iterator<File> it2 = 
+                                getSources(source).iterator(); it2.hasNext();) {
                             File te = it2.next();
                             //Calculate the full class name
                             JavaDocBuilder builder = new JavaDocBuilder();
                             builder.addSource(new FileReader(te));
                             JavaClass cls = builder.getClasses()[0];
-                            String pkg = cls.getPackage().getName();   // "com.blah.foo"
-                            String name = cls.getName();               // "MyClass"
-                            commands.add("--testclass=" + pkg + "." + name);
+                            String pkg = cls.getPackage().getName();
+                            String name = cls.getName();
+                            commands.add("--testclass=" + 
+                                    (pkg.isEmpty() ? "" : pkg + ".") + name);
                         }
                     }
                     //Pass parameters to the command
@@ -277,6 +254,7 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                         getLog().info("Executing command on path: " + pb.directory().getPath());
                         pb.redirectErrorStream(true);
                         String line;
+                        getLog().info("Generating tests, please wait...");
                         Process process = pb.start();
                         InputStream stderr = process.getErrorStream();
                         InputStream stdout = process.getInputStream();
@@ -314,7 +292,7 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                 }
             }
         };
-        Thread thread = new Thread(randoopProcess, "Randoop");
+        Thread thread = new Thread(randoopProcess, "Randoop Maven Plugin");
         thread.start();
         try {
             thread.join();
@@ -359,9 +337,9 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                  */
                 @Override
                 public int compare(Object o1, Object o2) {
-                    org.apache.maven.plugin.descriptor.Parameter parameter1 = 
+                    org.apache.maven.plugin.descriptor.Parameter parameter1 =
                             (org.apache.maven.plugin.descriptor.Parameter) o1;
-                    org.apache.maven.plugin.descriptor.Parameter parameter2 = 
+                    org.apache.maven.plugin.descriptor.Parameter parameter2 =
                             (org.apache.maven.plugin.descriptor.Parameter) o2;
 
                     return parameter1.getName().compareToIgnoreCase(parameter2.getName());
@@ -369,13 +347,13 @@ public class GenerateAllTestsMojo extends AbstractMojo {
             });
             for (Iterator it = params.iterator(); it.hasNext();) {
                 try {
-                    org.apache.maven.plugin.descriptor.Parameter parameter = 
+                    org.apache.maven.plugin.descriptor.Parameter parameter =
                             (org.apache.maven.plugin.descriptor.Parameter) it.next();
                     if (!parameter.isEditable()) {
                         continue;
                     }
                     getLog().debug("Getting value for: " + parameter.getName());
-                    Method method = 
+                    Method method =
                             getGetterMethod(WordUtils.capitalize(
                             parameter.getName().replaceAll("_", " "))
                             .replaceAll(" ", ""));
@@ -431,11 +409,11 @@ public class GenerateAllTestsMojo extends AbstractMojo {
         if (StringUtils.isNotEmpty(pi.getPrefix())) {
             descriptor = pluginManager.getPluginDescriptorForPrefix(pi.getPrefix());
             if (descriptor == null) {
-                forLookup = 
-                        pluginManager.getPluginDefinitionForPrefix(pi.getPrefix(), 
+                forLookup =
+                        pluginManager.getPluginDefinitionForPrefix(pi.getPrefix(),
                         session, project);
             }
-        } else if (StringUtils.isNotEmpty(pi.getGroupId()) 
+        } else if (StringUtils.isNotEmpty(pi.getGroupId())
                 && StringUtils.isNotEmpty(pi.getArtifactId())) {
             forLookup = new Plugin();
 
@@ -449,42 +427,42 @@ public class GenerateAllTestsMojo extends AbstractMojo {
 
         if (descriptor == null && forLookup != null) {
             try {
-                descriptor = pluginManager.verifyPlugin(forLookup, project, 
+                descriptor = pluginManager.verifyPlugin(forLookup, project,
                         settings, localRepository);
             } catch (ArtifactResolutionException e) {
                 throw new MojoExecutionException(
                         "Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId 
+                        + groupId + "'\nartifactId: '" + artifactId
                         + "'\nversion: '" + version + "'\n\n", e);
             } catch (PluginManagerException e) {
                 throw new MojoExecutionException(
                         "Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId 
+                        + groupId + "'\nartifactId: '" + artifactId
                         + "'\nversion: '" + version + "'\n\n", e);
             } catch (PluginVersionResolutionException e) {
                 throw new MojoExecutionException(
                         "Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId 
+                        + groupId + "'\nartifactId: '" + artifactId
                         + "'\nversion: '" + version + "'\n\n", e);
             } catch (ArtifactNotFoundException e) {
                 throw new MojoExecutionException(
-                        "Plugin dependency does not exist: " 
+                        "Plugin dependency does not exist: "
                         + e.getMessage(), e);
             } catch (InvalidVersionSpecificationException e) {
                 throw new MojoExecutionException(
                         "Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId 
+                        + groupId + "'\nartifactId: '" + artifactId
                         + "'\nversion: '" + version + "'\n\n", e);
             } catch (InvalidPluginException e) {
                 throw new MojoExecutionException(
                         "Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId 
+                        + groupId + "'\nartifactId: '" + artifactId
                         + "'\nversion: '" + version + "'\n\n", e);
             } catch (PluginNotFoundException e) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Unable to find plugin", e);
                 }
-                throw new MojoFailureException("Plugin does not exist: " 
+                throw new MojoFailureException("Plugin does not exist: "
                         + e.getMessage());
             } catch (PluginVersionNotFoundException e) {
                 if (getLog().isDebugEnabled()) {
@@ -673,8 +651,8 @@ public class GenerateAllTestsMojo extends AbstractMojo {
     }
 
     /**
-     * Makes test generation smarter.
-     * 1) 
+     * Makes test generation smarter. 1)
+     *
      * @return the smartGeneration
      */
     public boolean isSmartGeneration() {

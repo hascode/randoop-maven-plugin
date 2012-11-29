@@ -5,7 +5,7 @@
     <artifactId>randoop-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>Randoop-Maven-Plugin Maven Mojo</name>
+    <name>Randoop Maven Plugin</name>
     
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -13,11 +13,15 @@
         <version>7</version>
     </parent>
     
-    <description>This plug-in helps create Randdop tests for your java code.</description>
-    <url>http://sourceforge.net/p/outputhandler</url>
+    <description>Randoop is an automatic unit test generator for Java. It automatically creates unit tests for your classes, in JUnit format.
+
+        Randoop generates unit tests using feedback-directed random test generation. In a nutshell, this technique randomly, but smartly, generates sequences of methods and constructor invocations for the classes under test, and uses the sequences to create tests. Randoop executes the sequences it creates, using the results of the execution to create assertions that capture the behavior or your program and that catch bugs.
+        Randoop has created tests that find previously unkwon errors even in widely-used libraries including Sun and IBM's JDKs. A .NET version of Randoop, used internally at Microsoft, has been used successfully by a team of test engineers to find errors in a core .NET component that has been heavily tested for years. Randoop's combination of randomized test generation and test execution results in a highly effective test generation technique.
+    </description>
+    <url>https://sourceforge.net/projects/randoopmplugin/</url>
     <issueManagement>
         <system>jira</system>
-        <url>https://simple-marauroa.jira.com/browse/OH</url>
+        <url>https://simple-marauroa.jira.com/browse/RMP</url>
     </issueManagement>
     <developers>
         <developer>
@@ -36,9 +40,9 @@
         </license>
     </licenses>
     <scm>
-        <url>https://bitbucket.org/javydreamercsw/output-handler/src</url>
-        <connection>scm:hg:https://bitbucket.org/javydreamercsw/output-handler/src</connection>
-        <developerConnection>scm:hg:ssh://hg@bitbucket.org/javydreamercsw/output-handler</developerConnection>
+        <url>https://javydreamercsw@bitbucket.org/javydreamercsw/randoop-maven-plugin</url>
+        <connection>scm:hg:https://javydreamercsw@bitbucket.org/javydreamercsw/randoop-maven-plugin</connection>
+        <developerConnection>scm:hg:ssh://hg@bitbucket.org/javydreamercsw/randoop-maven-plugin</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <ciManagement>
@@ -50,12 +54,12 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -66,7 +70,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-project</artifactId>
-            <version>2.2.1</version>
+            <version>3.0-alpha-2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
@@ -74,20 +78,20 @@
             <version>1.1</version>
             <scope>test</scope>
         </dependency>
-		<!-- dependencies to annotations -->
+        <!-- dependencies to annotations -->
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
             <version>3.2</version>
             <!-- annotations are not needed for plugin execution so you can remove this dependency
-           for execution with using provided scope -->
-          <scope>provided</scope>
+            for execution with using provided scope -->
+            <scope>provided</scope>
         </dependency>
         <!-- generated help mojo has a dependency to plexus-utils -->
         <dependency>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-utils</artifactId>
-          <version>3.0.8</version>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.8</version>
         </dependency>
         <dependency>
             <artifactId>maven-model</artifactId>
@@ -109,19 +113,19 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>2.0</version>
+            <version>2.2.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-tools-api</artifactId>
-            <version>2.4.3</version>
+            <version>2.9</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.wagon</groupId>
             <artifactId>wagon-provider-api</artifactId>
-            <version>2.2</version>
+            <version>2.3</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -132,7 +136,7 @@
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
             <artifactId>qdox</artifactId>
-            <version>1.12</version>
+            <version>1.12.1</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -144,29 +148,29 @@
                 <version>3.2</version>
                 <configuration>
                     <goalPrefix>randoop</goalPrefix>
-					<!-- see http://jira.codehaus.org/browse/MNG-5346 -->
-                  <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                    <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
+                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
-            <executions>
-                  <execution>
-                    <id>mojo-descriptor</id>
-                    <goals>
-                      <goal>descriptor</goal>
-                    </goals>
-                  </execution>
-                  <!-- if you want to generate help goal -->
-                  <execution>
-                    <id>help-goal</id>
-                    <goals>
-                      <goal>helpmojo</goal>
-                    </goals>
-                  </execution>
+                <executions>
+                    <execution>
+                        <id>mojo-descriptor</id>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                    </execution>
+                    <!-- if you want to generate help goal -->
+                    <execution>
+                        <id>help-goal</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                    </execution>
                 </executions>
-              </plugin>
-              <plugin>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.0</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
