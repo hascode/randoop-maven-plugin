@@ -50,10 +50,14 @@ import org.apache.maven.plugin.PluginManager;
 import org.apache.maven.plugin.PluginManagerException;
 import org.apache.maven.plugin.PluginNotFoundException;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
-import org.apache.maven.plugin.descriptor.Parameter;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.version.PluginVersionNotFoundException;
 import org.apache.maven.plugin.version.PluginVersionResolutionException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.tools.plugin.util.PluginUtils;
@@ -62,228 +66,130 @@ import org.codehaus.plexus.util.StringUtils;
 /**
  * Generate tests for a Maven project
  *
- * @goal generate-all-tests
- * @requiresDependencyResolution compile
- * @requiresDirectInvocation true
- * @requiresProject true
- * @aggregator
- * @phase generate-resources
  * @see <a href="http://maven.apache.org/general.html#What_is_a_Mojo">What is a
  * Mojo?</a>
  */
+@Mojo( name = "generate-all-tests", 
+        requiresDependencyResolution = ResolutionScope.COMPILE, 
+        requiresDirectInvocation = true, 
+        defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class GenerateAllTestsMojo extends AbstractMojo {
 
     /**
      * The project whose project files to create.
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
      */
+    // Must configure pom.xml as per
+    // http://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html
+    @Component
     private MavenProject project;
     /**
      * The Plugin manager instance used to resolve Plugin descriptors.
      *
-     * @component role="org.apache.maven.plugin.PluginManager"
      */
+    @Component
     private PluginManager pluginManager;
     /**
      * The current user system settings for use in Maven. This is used for
      * plugin manager API calls.
      *
-     * @parameter expression="${settings}"
-     * @required
-     * @readonly
      */
+    @Parameter(required = true, readonly = true, property = "settings")
     private Settings settings;
     /**
      * The current build session instance. This is used for plugin manager API
      * calls.
-     *
-     * @parameter expression="${session}"
-     * @required
-     * @readonly
      */
+    @Parameter(required = true, readonly = true, property= "session")
     private MavenSession session;
     /**
      * The local repository ArtifactRepository instance. This is used for plugin
      * manager API calls.
      *
-     * @parameter expression="${localRepository}"
-     * @required
-     * @readonly
      */
+    @Parameter(required = true, readonly = true, property = "localRepository")
     private ArtifactRepository localRepository;
-//    @Parameter(required = true, readonly = true, defaultValue = "false")
-    /**
-     * @parameter expression="${silently_ignore_bad_classNames}"
-     * default-value="false"
-     * @required
-     * @readonly
-     */
-    private boolean silently_ignore_bad_classNames;
-//    @Parameter(required = true, readonly = true, defaultValue = "NONE")
-    /**
-     * @parameter expression="${literals_level}" default-value="NONE"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "false")
+    private boolean silently_ignore_bad_class_names;
+    
+    @Parameter(required = true, defaultValue = "NONE")
     private String literals_level;
-//    @Parameter(required = true, readonly = true, defaultValue = "0")
-    /**
-     * @parameter expression="${randomseed}" default-value="0"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "0")
     private int randomseed;
-//    @Parameter(required = true, readonly = true, defaultValue = "100")
-    /**
-     * @parameter expression="${timelimit}" default-value="100"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "100")
     private int timelimit;
-//    @Parameter(required = true, readonly = true, defaultValue = "100000000")
-    /**
-     * @parameter expression="${inputlimit}" default-value="100000000"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "100000000")
     private int inputlimit;
-//    @Parameter(required = true, readonly = true, defaultValue = "100000000")
-    /**
-     * @parameter expression="${outputlimit}" default-value="100000000"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "100000000")
     private int outputlimit;
-//    @Parameter(required = true, readonly = true, defaultValue = "100")
-    /**
-     * @parameter expression="${maxsize}" default-value="100"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "100")
     private int maxsize;
-//    @Parameter(required = true, readonly = true, defaultValue = "true")
-    /**
-     * @parameter expression="${forbid_null}" default-value="true"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "true")
     private boolean forbid_null;
-//    @Parameter(required = true, readonly = true, defaultValue = "10000")
-    /**
-     * @parameter expression="${string_maxlen}" default-value="10000"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "10000")
     private int string_maxlen;
-//    @Parameter(required = true, readonly = true, defaultValue = "0.0")
-    /**
-     * @parameter expression="${null_ratio}" default-value="0.0"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "0.0")
     private Double null_ratio;
-//    @Parameter(required = true, readonly = true, defaultValue = "0.0")
-    /**
-     * @parameter expression="${alias_ratio}" default-value="0.0"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "0.0")
     private Double alias_ratio;
-//    @Parameter(required = true, readonly = true, defaultValue = "false")
-    /**
-     * @parameter expression="${small_tests}" default-value="false"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "false")
     private boolean small_tests;
-//    @Parameter(required = true, readonly = true, defaultValue = "100000000")
-    /**
-     * @parameter expression="${clear}" default-value="100000000"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "100000000")
     private int clear;
-//    @Parameter(required = true, readonly = true, defaultValue = "true")
-    /**
-     * @parameter expression="${check_object_contracts}" default-value="true"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "true")
     private boolean check_object_contracts;
-//    @Parameter(required = true, readonly = true, defaultValue = "all")
-    /**
-     * @parameter expression="${output_tests}" default-value="all"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "all")
     private String output_tests;
-//    @Parameter(required = true, readonly = true, defaultValue = "500")
-    /**
-     * @parameter expression="${testsperfile}" default-value="500"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "500")
     private int testsperfile;
-//    @Parameter(required = true, readonly = true, defaultValue = "RandoopTest")
-    /**
-     * @parameter expression="${junit_classname}" default-value="RandoopTest"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "RandoopTest")
     private String junit_classname;
-//    @Parameter(required = true, readonly = true, defaultValue = "")
-    /**
-     * @parameter expression="${junit_package_name}" default-value=""
-     * @required
-     *
-     */
-    private String junit_package_name;
-//    @Parameter(required = true, readonly = true, defaultValue = "test")
-    /**
-     * @parameter expression="${junit_output_dir}" default-value=""
-     * @required
-     *
-     */
-    private String junit_output_dir;
-//    @Parameter(required = true, readonly = true, defaultValue = "false")
-    /**
-     * @parameter expression="${dont_output_tests}" default-value="false"
-     * @required
-     *
-     */
+    
+    //TODO: No way to set defaultValue ="" on the annotation. 
+    //Had to workaround it like this.
+    @Parameter
+    private String junit_package_name="";
+    
+    //TODO: No way to set defaultValue ="" on the annotation. 
+    //Had to workaround it like this.
+    @Parameter
+    private String junit_output_dir="";
+    
+    @Parameter(required = true, defaultValue = "false")
     private boolean dont_output_tests;
-//    @Parameter(required = true, readonly = true, defaultValue = "false")
-    /**
-     * @parameter expression="${output_nonexec}" default-value="false"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "false")
     private boolean output_nonexec;
-//    @Parameter(required = true, readonly = true, defaultValue = "")
-    /**
-     * @parameter expression="${agent}" default-value=""
-     * @required
-     *
-     */
-    private String agent;
-//    @Parameter(required = true, readonly = true, defaultValue = "1000")
-    /**
-     * @parameter expression="${mem_megabytes}" default-value="1000"
-     * @required
-     *
-     */
+    
+    //TODO: No way to set defaultValue ="" on the annotation. 
+    //Had to workaround it like this.
+    @Parameter(readonly = true)
+    private String agent="";
+    
+    @Parameter(required = true, defaultValue = "1000")
     private int mem_megabytes;
-//    @Parameter(required = true, readonly = true, defaultValue = "false")
-    /**
-     * @parameter expression="${capture_output}" default-value="false"
-     * @required
-     *
-     */
+    
+    @Parameter(required = true, defaultValue = "false")
     private boolean capture_output;
-    //TODO: Add property to be smart about location and naming of test cases based on class being tested
+    
+    @Parameter(required = true, readonly = true, defaultValue = "false")
+    private boolean smartGeneration;
+    
     private String version = "1.0-SNAPSHOT";
     private String groupId = "net.sourceforge.javydreamercsw";
     private String artifactId = "randoop-maven-plugin";
@@ -336,10 +242,10 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                             //Calculate the full class name
                             JavaDocBuilder builder = new JavaDocBuilder();
                             builder.addSource(new FileReader(te));
-                            JavaClass cls=builder.getClasses()[0];
+                            JavaClass cls = builder.getClasses()[0];
                             String pkg = cls.getPackage().getName();   // "com.blah.foo"
                             String name = cls.getName();               // "MyClass"
-                            commands.add("--testclass=" + pkg+"."+name);
+                            commands.add("--testclass=" + pkg + "." + name);
                         }
                     }
                     //Pass parameters to the command
@@ -364,7 +270,7 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                             }
                         }
                     }
-                    getLog().info("Running command: " + commands.toString().replaceAll(",", ""));
+                    getLog().debug("Running command: " + commands.toString().replaceAll(",", ""));
                     try {
                         ProcessBuilder pb = new ProcessBuilder(commands);
                         pb.directory(project.getBasedir());
@@ -403,9 +309,9 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                     getLog().debug(ex);
                 } catch (MojoFailureException ex) {
                     getLog().debug(ex);
-                }catch (IOException ex) {
+                } catch (IOException ex) {
                     getLog().debug(ex);
-                } 
+                }
             }
         };
         Thread thread = new Thread(randoopProcess, "Randoop");
@@ -453,20 +359,26 @@ public class GenerateAllTestsMojo extends AbstractMojo {
                  */
                 @Override
                 public int compare(Object o1, Object o2) {
-                    Parameter parameter1 = (Parameter) o1;
-                    Parameter parameter2 = (Parameter) o2;
+                    org.apache.maven.plugin.descriptor.Parameter parameter1 = 
+                            (org.apache.maven.plugin.descriptor.Parameter) o1;
+                    org.apache.maven.plugin.descriptor.Parameter parameter2 = 
+                            (org.apache.maven.plugin.descriptor.Parameter) o2;
 
                     return parameter1.getName().compareToIgnoreCase(parameter2.getName());
                 }
             });
             for (Iterator it = params.iterator(); it.hasNext();) {
                 try {
-                    Parameter parameter = (Parameter) it.next();
+                    org.apache.maven.plugin.descriptor.Parameter parameter = 
+                            (org.apache.maven.plugin.descriptor.Parameter) it.next();
                     if (!parameter.isEditable()) {
                         continue;
                     }
                     getLog().debug("Getting value for: " + parameter.getName());
-                    Method method = getGetterMethod(WordUtils.capitalize(parameter.getName().replaceAll("_", " ")).replaceAll(" ", ""));
+                    Method method = 
+                            getGetterMethod(WordUtils.capitalize(
+                            parameter.getName().replaceAll("_", " "))
+                            .replaceAll(" ", ""));
                     if (method != null) {
                         Object result = method.invoke(this);
                         if (result != null) {
@@ -519,9 +431,12 @@ public class GenerateAllTestsMojo extends AbstractMojo {
         if (StringUtils.isNotEmpty(pi.getPrefix())) {
             descriptor = pluginManager.getPluginDescriptorForPrefix(pi.getPrefix());
             if (descriptor == null) {
-                forLookup = pluginManager.getPluginDefinitionForPrefix(pi.getPrefix(), session, project);
+                forLookup = 
+                        pluginManager.getPluginDefinitionForPrefix(pi.getPrefix(), 
+                        session, project);
             }
-        } else if (StringUtils.isNotEmpty(pi.getGroupId()) && StringUtils.isNotEmpty(pi.getArtifactId())) {
+        } else if (StringUtils.isNotEmpty(pi.getGroupId()) 
+                && StringUtils.isNotEmpty(pi.getArtifactId())) {
             forLookup = new Plugin();
 
             forLookup.setGroupId(pi.getGroupId());
@@ -534,29 +449,43 @@ public class GenerateAllTestsMojo extends AbstractMojo {
 
         if (descriptor == null && forLookup != null) {
             try {
-                descriptor = pluginManager.verifyPlugin(forLookup, project, settings, localRepository);
+                descriptor = pluginManager.verifyPlugin(forLookup, project, 
+                        settings, localRepository);
             } catch (ArtifactResolutionException e) {
-                throw new MojoExecutionException("Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId + "'\nversion: '" + version + "'\n\n", e);
+                throw new MojoExecutionException(
+                        "Error retrieving plugin descriptor for:\n\ngroupId: '"
+                        + groupId + "'\nartifactId: '" + artifactId 
+                        + "'\nversion: '" + version + "'\n\n", e);
             } catch (PluginManagerException e) {
-                throw new MojoExecutionException("Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId + "'\nversion: '" + version + "'\n\n", e);
+                throw new MojoExecutionException(
+                        "Error retrieving plugin descriptor for:\n\ngroupId: '"
+                        + groupId + "'\nartifactId: '" + artifactId 
+                        + "'\nversion: '" + version + "'\n\n", e);
             } catch (PluginVersionResolutionException e) {
-                throw new MojoExecutionException("Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId + "'\nversion: '" + version + "'\n\n", e);
+                throw new MojoExecutionException(
+                        "Error retrieving plugin descriptor for:\n\ngroupId: '"
+                        + groupId + "'\nartifactId: '" + artifactId 
+                        + "'\nversion: '" + version + "'\n\n", e);
             } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException("Plugin dependency does not exist: " + e.getMessage(), e);
+                throw new MojoExecutionException(
+                        "Plugin dependency does not exist: " 
+                        + e.getMessage(), e);
             } catch (InvalidVersionSpecificationException e) {
-                throw new MojoExecutionException("Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId + "'\nversion: '" + version + "'\n\n", e);
+                throw new MojoExecutionException(
+                        "Error retrieving plugin descriptor for:\n\ngroupId: '"
+                        + groupId + "'\nartifactId: '" + artifactId 
+                        + "'\nversion: '" + version + "'\n\n", e);
             } catch (InvalidPluginException e) {
-                throw new MojoExecutionException("Error retrieving plugin descriptor for:\n\ngroupId: '"
-                        + groupId + "'\nartifactId: '" + artifactId + "'\nversion: '" + version + "'\n\n", e);
+                throw new MojoExecutionException(
+                        "Error retrieving plugin descriptor for:\n\ngroupId: '"
+                        + groupId + "'\nartifactId: '" + artifactId 
+                        + "'\nversion: '" + version + "'\n\n", e);
             } catch (PluginNotFoundException e) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Unable to find plugin", e);
                 }
-                throw new MojoFailureException("Plugin does not exist: " + e.getMessage());
+                throw new MojoFailureException("Plugin does not exist: " 
+                        + e.getMessage());
             } catch (PluginVersionNotFoundException e) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Unable to find plugin version", e);
@@ -566,8 +495,10 @@ public class GenerateAllTestsMojo extends AbstractMojo {
         }
 
         if (descriptor == null) {
-            throw new MojoFailureException("Plugin could not be found. If you believe it is correct,"
-                    + " check your pluginGroups setting, and run with -U to update the remote configuration");
+            throw new MojoFailureException(
+                    "Plugin could not be found. If you believe it is correct,"
+                    + " check your pluginGroups setting, and run with "
+                    + "-U to update the remote configuration");
         }
 
         return descriptor;
@@ -577,7 +508,7 @@ public class GenerateAllTestsMojo extends AbstractMojo {
      * @return the silentlyIgnoreBadClassNames
      */
     public boolean getSilentlyIgnoreBadClassNames() {
-        return silently_ignore_bad_classNames;
+        return silently_ignore_bad_class_names;
     }
 
     /**
@@ -739,6 +670,15 @@ public class GenerateAllTestsMojo extends AbstractMojo {
      */
     public boolean getCaptureOutput() {
         return capture_output;
+    }
+
+    /**
+     * Makes test generation smarter.
+     * 1) 
+     * @return the smartGeneration
+     */
+    public boolean isSmartGeneration() {
+        return smartGeneration;
     }
 
     /**
