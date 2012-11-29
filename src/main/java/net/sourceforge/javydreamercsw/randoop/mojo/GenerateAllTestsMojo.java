@@ -111,10 +111,7 @@ public class GenerateAllTestsMojo extends AbstractRandoopMojo {
                         getLog().debug("Running command(s): "
                                 + commands.toString().replaceAll(",", ""));
                         try {
-                            ProcessBuilder pb =
-                                    //                                new ProcessBuilder(
-                                    //                                commands.toArray(new String[commands.size()]));
-                                    new ProcessBuilder(commands);
+                            ProcessBuilder pb = new ProcessBuilder(commands);
                             pb.directory(project.getBasedir());
                             getLog().info("Executing command on path: "
                                     + pb.directory().getPath());
