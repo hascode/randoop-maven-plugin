@@ -64,8 +64,10 @@ public abstract class AbstractRandoopMojo extends AbstractMojo {
     @Parameter(required = true, readonly = true, property = "session")
     protected MavenSession session;
     /**
-     * The current user system settings for use in Maven. This is used for
-     * plugin manager API calls.
+     * Use smart generation of tests.
+     * If configured, the following behavior will be executed:
+     * 1) Tests will be placed on src/test/java/randoop/<ClassName> folder
+     * 2) Randoop test cases file name will be <ClassName> instead of the default.
      *
      */
     @Parameter(required = true, readonly = true, defaultValue = "false")
