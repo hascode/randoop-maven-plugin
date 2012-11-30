@@ -369,6 +369,10 @@
                                 <issueLinkTemplate>https://simple-marauroa.jira.com/browse/%ISSUE%</issueLinkTemplate>
                             </configuration>
                         </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-plugin-plugin</artifactId>
+                        </plugin>
                     </reportPlugins>
                 </configuration>
             </plugin>
