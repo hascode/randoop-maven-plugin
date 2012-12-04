@@ -28,10 +28,9 @@ public class RandoopMojoTest extends AbstractMojoTestCase {
      * @throws Exception
      */
     public void testMojoConfig() throws Exception {
-        File testPom = new File(getBasedir(),
-                "src/test/resources/net/sourceforge/javydreamercsw/randoop/mojo/"
-                + "my-dummy-maven-project/Dummy/pom.xml");
-        GenerateAllTestsMojo mojo = (GenerateAllTestsMojo) lookupMojo("generate-all-tests", testPom);
+        File testPom = new File(getBasedir(),"src/it/Dummy/pom.xml");
+        GenerateAllTestsMojo mojo = 
+                (GenerateAllTestsMojo) lookupMojo("generate-all-tests", testPom);
         assertNotNull(mojo);
         //Load the dummy project
         Model model = null;

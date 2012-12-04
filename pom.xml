@@ -68,6 +68,7 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>randoop</groupId>
@@ -362,13 +363,14 @@
                                 </excludeRoots>
                             </configuration>
                         </plugin>
+                        <!--
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-changelog-plugin</artifactId>
                             <configuration>
                                 <issueLinkTemplate>https://simple-marauroa.jira.com/browse/%ISSUE%</issueLinkTemplate>
                             </configuration>
-                        </plugin>
+                        </plugin>-->
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-plugin-plugin</artifactId>
