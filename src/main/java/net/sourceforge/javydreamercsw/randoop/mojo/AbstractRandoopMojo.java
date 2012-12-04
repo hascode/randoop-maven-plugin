@@ -65,6 +65,7 @@ public abstract class AbstractRandoopMojo extends AbstractMojo {
     protected MavenSession session;
     /**
      * Use smart generation of tests.
+     * 
      * If configured, the following behavior will be executed:
      * 1) Tests will be placed on src/test/java/randoop/<ClassName> folder
      * 2) Randoop test cases file name will be <ClassName> instead of the default.
@@ -317,7 +318,8 @@ public abstract class AbstractRandoopMojo extends AbstractMojo {
                     basicCommand.add(1, "-Xmx" + entry.getValue()
                             + "m");
                 } else if ((entry.getKey().equals("junit_output_dir")
-                        || entry.getKey().equals("junit_classname"))
+                        || entry.getKey().equals("junit_classname")
+                        || entry.getKey().equals("junit_package_name"))
                         && isSmartGeneration()) {
                     //Skip it, is going to be set later
                     getLog().debug("Skipping setting parameter: "
@@ -352,13 +354,17 @@ public abstract class AbstractRandoopMojo extends AbstractMojo {
                 }
             }
         }
+        getLog().debug("Basic command: " + basicCommand.toString());
         if (isSmartGeneration()) {
             for (Iterator<String> it = sourceList.iterator(); it.hasNext();) {
                 String c = it.next();
-                ArrayList<String> copy = basicCommand;
+                ArrayList<String> copy = new ArrayList<String>();
+                copy.addAll(basicCommand);
                 String className = c.substring(c.lastIndexOf('.') + 1);
-                copy.add("--junit_output_dir=src/test/java/randoop/" + className);
-                copy.add("--junit_classname=" + className);
+                String targetPackage = c.substring(0, c.lastIndexOf('.'));
+                copy.add("--junit-output-dir=src/test/java/");
+                copy.add("--junit-package-name=randoop." + targetPackage + "." + className);
+                copy.add("--junit-classname=" + className + "RandoopTest");
                 copy.add("--testclass=" + c);
                 commands.add(copy);
             }
@@ -366,6 +372,7 @@ public abstract class AbstractRandoopMojo extends AbstractMojo {
             //Just add the command normally
             commands.add(basicCommand);
         }
+        getLog().debug("Amount of commands: " + commands.size());
         return commands;
     }
 }
