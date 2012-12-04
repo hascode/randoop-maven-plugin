@@ -15,7 +15,7 @@ Plugin Name
 
   General information about the goals.
 
-  * {{{./generate-all-tests.html}generate-all-tests:goal}} short description for this plugin goal.
+  * {{{./generate-all-tests.html}generate-all-tests:goal}} Generate all tests for the project.
 
 * Usage
 
@@ -37,11 +37,11 @@ Plugin Name
   {{{source-repository.html}source repository}} and will find supplementary information in the
   {{{http://maven.apache.org/guides/development/guide-helping.html}guide to helping with Maven}}. 
 
-* Examples
+~~* Examples
 
-  To provide you with better understanding of some usages of the Plugin Name,
-  you can take a look into the following examples:
+  ~~To provide you with better understanding of some usages of the Plugin Name,
+  ~~you can take a look into the following examples:
 
-  * {{{examples/example-one.html}Example Description One}}
+  ~~* {{{examples/example-one.html}Example Description One}}
 
-  * {{{examples/example-two.html}Example Description Two}}
+  ~~* {{{examples/example-two.html}Example Description Two}}

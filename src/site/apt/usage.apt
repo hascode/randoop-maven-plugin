@@ -47,8 +47,8 @@ mvn randoop:generate-all-tests
 * Smart generation
 
   If configured, the following behavior will be executed:
-    * Tests will be placed on src/test/java/randoop/<ClassName> folder
-    * Randoop test cases file name will be <ClassName> instead of the default.
+  * Tests will be placed on src/test/java/randoop/<ClassName> folder
+  * Randoop test cases file name will be <ClassName> instead of the default.
 
 +-----+
 <project>
