@@ -71,7 +71,7 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>randoop</groupId>
+            <groupId>net.sourceforege.javydreamercsw</groupId>
             <artifactId>randoop</artifactId>
             <version>1.3.2</version>
         </dependency>
@@ -275,31 +275,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>install-randoop</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>mvn</executable>
-                            <arguments>
-                                <argument>install:install-file</argument>
-                                <argument>-Dfile=lib/randoop.1.3.2.jar</argument>
-                                <argument>-DgroupId=${project.groupId}</argument>
-                                <argument>-DartifactId=randoop</argument>
-                                <argument>-Dversion=1.3.2</argument>
-                                <argument>-Dpackaging=jar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <configuration>
